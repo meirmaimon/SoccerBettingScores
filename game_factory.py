@@ -1,5 +1,10 @@
+"""
+This module is a Factory module to create the game components.
+implements a basic factory that create an object given needed parameters.
+Classes:
+    GameFactory
+"""
 from game_components import *
-
 
 class GameFactory:
     @staticmethod

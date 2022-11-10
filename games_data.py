@@ -4,13 +4,9 @@ using https://api.the-odds-api.com API"""
 
 import requests
 import config
-# from game_components import *
 from game_factory import *
 
 API_SOCCER_KEY = config.api_soccer_key
-# SPORT_TYPE = "soccer_uefa_champs_league"
-# REGIONS = "us,uk,au,eu"
-# API_SOCCER_ODDS = f"https://api.the-odds-api.com/v4/sports/{SPORT_TYPE}/odds"
 API_SPORT = 'https://api.the-odds-api.com/v4/sports'
 
 
@@ -43,7 +39,12 @@ def get_games_data(sport_type, regions, markets='h2h'):
     return res.json()
 
 
-def format_game_data(sport_info):
+def create_game_list(sport_info):
+    """
+    Create list of all the games from the sport data given by the API
+    :param sport_info: betting data fetched from odd_API
+    :return: list of games with theirs betting data
+    """
     games_list = []
     # Get teams name and game time
     for game_info in sport_info:
@@ -57,10 +58,10 @@ def format_game_data(sport_info):
             for market in bookmaker['markets']:
                 market_type = market['key']
                 outcomes_odds = market['outcomes']
-                current_odd = GameFactory.create_odd(market_type,outcomes_odds,home_team,away_team,bookmaker_title)
+                current_odd = GameFactory.create_odd(market_type, outcomes_odds, home_team, away_team, bookmaker_title)
                 markets_odds.append(current_odd)
         # Create markets from the odds list
         markets = GameFactory.create_markets(markets_odds)
         # Create Game
-        games_list.append(GameFactory.create_game(home_team,away_team,game_date,markets))
+        games_list.append(GameFactory.create_game(home_team, away_team, game_date, markets))
     return games_list

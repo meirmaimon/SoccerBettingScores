@@ -1,3 +1,13 @@
+"""
+This module contains all games components classes.
+
+Classes:
+    Odd
+    H2HOdd
+    SpreadsOdd
+    Game
+    Market
+"""
 class Odd:
 
     def __init__(self, bookmaker, home_odd, away_odd, odd_type):
@@ -20,7 +30,6 @@ class SpreadsOdd(Odd):
         self.away_point = point_away
 
 
-
 class Market:
     def __init__(self, market_type, odds):
         self.market_type = market_type
@@ -33,7 +42,7 @@ class Market:
                           not a.startswith('__')
                           and not callable(getattr(odd, a))
                           and (type(getattr(odd, a)) == float)]
-        odd_attributes_dict = dict.fromkeys(odd_attributes, (0, ""))
+        odd_attributes_dict = dict.fromkeys(odd_attributes, (float("-inf"), ""))
         for odd in self.market_odds:
             for odd_attr in odd_attributes:
                 prev_odd_val = odd_attributes_dict.get(odd_attr)[0]
@@ -51,5 +60,3 @@ class Game:
         self.date = date
         self.markets = markets
         self.best_odds = [market.find_best() for market in self.markets]
-
-
