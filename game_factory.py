@@ -6,6 +6,7 @@ Classes:
 """
 from game_components import *
 
+
 class GameFactory:
     @staticmethod
     def create_odd(market_type, outcomes_odds, home_team, away_team, bookmaker):
@@ -24,6 +25,29 @@ class GameFactory:
             raise Exception("Invalid odd format")
 
     @staticmethod
+    def create_multy_bookmaker_odd(market_type, outcomes_odds):
+        if market_type == 'h2h' or market_type == 'h2h_lay':
+            home_odd = outcomes_odds['home_odd'].offer
+            home_bookmaker = outcomes_odds['home_odd'].bookmaker
+            away_odd = outcomes_odds['away_odd'].offer
+            away_bookmaker = outcomes_odds['away_odd'].bookmaker
+            draw_odd = outcomes_odds['draw_odd'].offer
+            draw_bookmaker = outcomes_odds['draw_odd'].bookmaker
+            return MultyBookmakerH2HOdd(home_odd, away_odd, home_bookmaker, away_bookmaker, draw_odd, draw_bookmaker,
+                                        market_type)
+        elif market_type == 'spreads':
+            home_odd = outcomes_odds['home_odd'].offer
+            home_point = outcomes_odds['home_point'].offer
+            home_bookmaker = outcomes_odds['home_odd'].bookmaker
+            away_odd = outcomes_odds['away_odd'].offer
+            away_point = outcomes_odds['away_point'].offer
+            away_bookmaker = outcomes_odds['away_odd'].bookmaker
+            return MultyBookmakerSpreadsOdd(home_odd, away_odd,home_bookmaker, away_bookmaker, home_point, away_point,
+                                            market_type)
+        else:
+            raise Exception("Invalid odd format")
+
+    @staticmethod
     def create_markets(odd_list: Odd):
         markets_types = {}
         for odd in odd_list:
@@ -31,5 +55,5 @@ class GameFactory:
         return [Market(k, v) for (k, v) in markets_types.items()]
 
     @staticmethod
-    def create_game(home_team,away_team,date,markets):
-        return Game(home_team,away_team,date,markets)
+    def create_game(home_team, away_team, date, markets):
+        return Game(home_team, away_team, date, markets)

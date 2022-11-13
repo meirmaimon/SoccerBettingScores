@@ -62,6 +62,25 @@ def create_game_list(sport_info):
                 markets_odds.append(current_odd)
         # Create markets from the odds list
         markets = GameFactory.create_markets(markets_odds)
+        # Create Market Best MultyBookmakerOdd
+        for market in markets:
+            market.set_market_best_multy_bookmaker_odds(create_market_best_multy_bookmaker_odds(market))
         # Create Game
         games_list.append(GameFactory.create_game(home_team, away_team, game_date, markets))
     return games_list
+
+
+def create_market_best_multy_bookmaker_odds(market: Market):
+    odd = market.market_odds[0]
+    odd_attributes = [a for a in dir(odd) if
+                      not a.startswith('__')
+                      and not callable(getattr(odd, a))
+                      and (type(getattr(odd, a)) == float)]
+    odd_attributes_dict = dict.fromkeys(odd_attributes, BookmakerOffer("", float("-inf")))
+    for odd in market.market_odds:
+        for odd_attr in odd_attributes:
+            prev_odd_val = odd_attributes_dict.get(odd_attr).offer
+            cur_odd_val = getattr(odd, odd_attr)
+            if cur_odd_val > prev_odd_val:
+                odd_attributes_dict[odd_attr] = BookmakerOffer(getattr(odd, "bookmaker"), cur_odd_val)
+    return GameFactory.create_multy_bookmaker_odd(market.market_type, odd_attributes_dict)
