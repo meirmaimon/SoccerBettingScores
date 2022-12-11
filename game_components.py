@@ -40,8 +40,8 @@ class BookmakerOffer:
 
 @dataclass
 class MultyBookmakerOdd:
-    home_odd: str
-    away_odd: str
+    home_odd: float
+    away_odd: float
     home_bookmaker: str
     away_bookmaker: str
 
@@ -64,7 +64,7 @@ class MultyBookmakerSpreadsOdd(MultyBookmakerOdd):
 class Market:
     market_type: str
     market_odds: list[Odd]
-    best_odds: list[MultyBookmakerOdd] = field(default_factory=list)
+    best_odds: MultyBookmakerOdd = field(default=None)
 
     def set_market_best_multy_bookmaker_odds(self, best_odd: MultyBookmakerOdd):
         self.best_odds = best_odd

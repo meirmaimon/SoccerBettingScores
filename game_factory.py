@@ -42,7 +42,7 @@ class GameFactory:
             away_odd = outcomes_odds['away_odd'].offer
             away_point = outcomes_odds['away_point'].offer
             away_bookmaker = outcomes_odds['away_odd'].bookmaker
-            return MultyBookmakerSpreadsOdd(home_odd, away_odd,home_bookmaker, away_bookmaker, home_point, away_point,
+            return MultyBookmakerSpreadsOdd(home_odd, away_odd, home_bookmaker, away_bookmaker, home_point, away_point,
                                             market_type)
         else:
             raise Exception("Invalid odd format")
@@ -57,3 +57,12 @@ class GameFactory:
     @staticmethod
     def create_game(home_team, away_team, date, markets):
         return Game(home_team, away_team, date, markets)
+
+    @staticmethod
+    def create_outcomes_list(multy_odd):
+        outcomes = []
+        if multy_odd.odd_type == 'h2h':
+            outcomes.append(multy_odd.home_odd)
+            outcomes.append(multy_odd.away_odd)
+            outcomes.append(multy_odd.draw_odd)
+            return outcomes
